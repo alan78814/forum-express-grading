@@ -25,7 +25,11 @@ module.exports = (app, passport) => {
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
   // 在 /admin/restaurants 底下則交給 adminController.getRestaurants 處理
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
-  
+  // 渲染新增餐廳頁面的路由
+  app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
+  // 新增餐廳
+  app.post('/admin/restaurants', authenticatedAdmin, adminController.postRestaurant)
+
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
   // 新增登入以及登出的路由：
