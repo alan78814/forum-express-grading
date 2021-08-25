@@ -18,6 +18,7 @@ app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
+app.use('/upload', express.static(__dirname + '/upload')) // 設定靜態檔案路徑 /upload  https://expressjs.com/en/starter/static-files.html
 
 // 把 req.flash 放到 res.locals 裡面
 app.use((req, res, next) => {
