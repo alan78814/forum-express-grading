@@ -3,6 +3,7 @@ const Restaurant = db.Restaurant
 const fs = require('fs') // 引入 fs 模組 https://ithelp.ithome.com.tw/articles/10185422
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+const User = db.User
 
 const adminController = {
     getRestaurants: (req, res) => {
@@ -124,7 +125,33 @@ const adminController = {
                         res.redirect('/admin/restaurants')
                     })
             })
-    }
+    },
+
+    getUsers: (req, res, next) => {
+        User.findAll({ raw: true })
+            .then((users) => {
+                return res.render('admin/users', { users })
+            })
+            .catch(err => next(err))
+    },
+
+    toggleAdmin: (req, res, next) => {
+        const id = req.params.id
+        User.findByPk(id)
+            .then((user) => {
+                if (user.isAdmin ) {
+                    return user.update({ isAdmin: false })
+                    // 沒加 return 畫面不會即時更新 
+                } else {
+                    return user.update({ isAdmin: true })
+                }
+            })
+            .then((user) => {
+                return res.redirect('/admin/users') 
+            })
+            .catch(err => next(err))
+        
+    },
 }
 
 module.exports = adminController
