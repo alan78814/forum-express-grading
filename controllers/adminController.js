@@ -139,18 +139,18 @@ const adminController = {
         const id = req.params.id
         User.findByPk(id)
             .then((user) => {
-                if (user.isAdmin ) {
+                if (user.isAdmin) {
                     return user.update({ isAdmin: false })
                     // 沒加 return 畫面不會即時更新 
                 } else {
                     return user.update({ isAdmin: true })
                 }
             })
-            .then((user) => {
-                return res.redirect('/admin/users') 
+            .then(() => {
+                return res.redirect('/admin/users')
             })
             .catch(err => next(err))
-        
+
     },
 }
 
