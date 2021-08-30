@@ -4,10 +4,16 @@ const fs = require('fs') // 引入 fs 模組 https://ithelp.ithome.com.tw/articl
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const User = db.User
+const Category = db.Category
 
 const adminController = {
     getRestaurants: (req, res) => {
-        return Restaurant.findAll({ raw: true }).then(restaurants => {
+        return Restaurant.findAll({
+            raw: true,
+            nest: true,
+            include: [Category]
+        }).then(restaurants => {
+            console.log(restaurants) // 加入 console 觀察資料的變化
             return res.render('admin/restaurants', { restaurants: restaurants })
         })
     },
@@ -55,9 +61,12 @@ const adminController = {
     },
 
     getRestaurant: (req, res) => {
-        return Restaurant.findByPk(req.params.id, { raw: true }).then(restaurant => {
+        return Restaurant.findByPk(req.params.id, {
+            include: [Category]
+        }).then(restaurant => {
+            // console.log(restaurant)// 加入 console 觀察資料的變化
             return res.render('admin/restaurant', {
-                restaurant: restaurant
+                restaurant: restaurant.toJSON()
             })
         })
     },
