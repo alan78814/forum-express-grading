@@ -4,6 +4,7 @@ const adminController = require('../controllers/adminController.js')
 const userController = require('../controllers/userController.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
+const categoryController = require('../controllers/categoryController.js')  
 
 module.exports = (app, passport) => {
   const authenticated = (req, res, next) => {
@@ -44,6 +45,8 @@ module.exports = (app, passport) => {
   app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
   // 修改使用者權限
   app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
+  // 瀏覽分類
+  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
