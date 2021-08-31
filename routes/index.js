@@ -56,6 +56,8 @@ module.exports = (app, passport) => {
   app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
   // 刪除分類
   app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
+  // 刪除評論
+  app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
   // 前台
   // 前台瀏覽餐廳個別資料 
