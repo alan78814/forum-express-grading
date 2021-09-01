@@ -64,6 +64,13 @@ module.exports = (app, passport) => {
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
   // 新增評論
   app.post('/comments', authenticated, commentController.postComment)
+  // 瀏覽 Profile
+  app.get('/users/:id', authenticated, userController.getUser)
+  // 瀏覽編輯 Profile 頁面
+  app.get('/users/:id/edit', authenticated, userController.editUser)
+  //  編輯 Profile
+  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)

@@ -1,5 +1,0 @@
-http://localhost:3000/admin/users
-
-$env:NODE_ENV="test"：切換到測試環境
-
-echo $env:NODE_ENV ：印出目前使用的環境
