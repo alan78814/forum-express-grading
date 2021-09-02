@@ -4,6 +4,8 @@ const User = db.User
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const helpers = require('../_helpers')
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 
 const userController = {
     signUpPage: (req, res) => {
@@ -50,9 +52,16 @@ const userController = {
     },
 
     getUser: (req, res, next) => {
-        User.findByPk(req.params.id)
+        const userId = Number(req.params.id)    
+        User.findAndCountAll({
+            include: [{ model: Comment, include: [Restaurant] }],
+            where: { id: userId }
+        })
             .then((user) => {
-                return res.render('profile', { user: user.toJSON() })
+                return res.render('profile', {
+                    user: user.rows[0].toJSON(),
+                    count: user.rows[0].Comments.length // count 直接使用 findAndCountAll 之 count 當沒評論時會顯示1
+                })
             })
             .catch(err => next(err))
     },

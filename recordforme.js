@@ -8,8 +8,10 @@ npx sequelize db:seed --seed my_seeder_file.js
 
 npx sequelize migration:generate --name add-image-to-users
 
-console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
 
 npx sequelize db:seed --seed 20210825070851-users-seed-file.js
 npx sequelize db:seed --seed 20210830033246-categories-seed-file.js
-npx sequelize db:seed --seed 20210825071142-restaurants-seed-file.js
+npx sequelize db: seed--seed 20210825071142 - restaurants - seed - file.js
+
+

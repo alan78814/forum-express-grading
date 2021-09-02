@@ -1,4 +1,4 @@
-<div class="row">
+<div class="col">
     <div class="card-body d-flex">
         <div class="col-md-4">
             <img class="img-responsive center-block" src="{{user.image}}">
@@ -7,9 +7,22 @@
         <div class="col-md-8">
             <h1>{{user.name}}</h1>
             <p>{{user.email}}</p>
+            <p> {{count}} 已評論餐廳</p>
             <a href='/users/{{user.id}}/edit'>
                 <button type="button" class="btn btn-primary">Edit</button>
             </a>
         </div>
     </div>
+
+    <div class="col">
+        <h5 class="card-header">{{count}} 已評論餐廳</h5 >
+        <div class="card-body">
+            {{#each user.Comments}}
+            <a href="/restaurants/{{this.RestaurantId}}">
+                <img src="{{this.Restaurant.image}}" class="img m-1" >
+            </a>
+            {{/each}}
+        </div>
+    </div>
+
 </div>
