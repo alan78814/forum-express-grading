@@ -67,6 +67,8 @@ module.exports = (app, passport) => {
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
   // 新增評論
   app.post('/comments', authenticated, commentController.postComment)
+  // 點擊前往dashboard 頁面
+  app.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 
 
   app.get('/signup', userController.signUpPage)
