@@ -8,23 +8,23 @@ const routes = require('../routes/index')
 const db = require('../models')
 const helpers = require('../_helpers');
 
-describe('# A17: 使用者權限管理', function() {
+describe('# A19: 建立 User Profile', function() {
     
-  context('# [顯示使用者清單]', () => {
+  context('# [瀏覽 Profile]', () => {
     before(async() => {
       this.ensureAuthenticated = sinon.stub(
         helpers, 'ensureAuthenticated'
       ).returns(true);
       this.getUser = sinon.stub(
         helpers, 'getUser'
-      ).returns({id: 1, isAdmin: true});
+      ).returns({id: 1, Followings: []});
 
       await db.User.create({name: 'User1'})
     })
 
-    it(" GET /admin/users ", (done) => {
+    it(" GET /users/:id ", (done) => {
         request(app)
-          .get('/admin/users')
+          .get('/users/1')
           .end(function(err, res) {
             res.text.should.include('User1')
             done()
@@ -34,35 +34,34 @@ describe('# A17: 使用者權限管理', function() {
     after(async () => {
       this.ensureAuthenticated.restore();
       this.getUser.restore();
+
       await db.Comment.destroy({where: {},truncate: true})
       await db.Restaurant.destroy({where: {},truncate: true})
       await db.sequelize.truncate()
     })
-
   })
 
-  context('# [修改使用者權限]', () => {
+  context('# [瀏覽編輯 Profile 頁面]', () => {
     before(async() => {
       this.ensureAuthenticated = sinon.stub(
         helpers, 'ensureAuthenticated'
       ).returns(true);
       this.getUser = sinon.stub(
         helpers, 'getUser'
-      ).returns({id: 1, isAdmin: true});
+      ).returns({id: 1});
 
-      await db.User.create({name: 'User1', isAdmin: false})
+      await db.User.create({name: 'User1'})
     })
 
-    it(" PUT /admin/users/:id/toggleAdmin ", (done) => {
+    it(" GET /users/:id/edit ", (done) => {
         db.User.findByPk(1).then(user => {
           user.isAdmin.should.equal(false);
           request(app)
-            .put('/admin/users/1/toggleAdmin')
-            .type("form")
+            .get('/users/1/edit')
             .end(function(err, res) {
+              res.text.should.include('form')
               db.User.findByPk(1).then(user => {
                 user.name.should.equal('User1');
-                user.isAdmin.should.equal(true);
                 return done();
               })
           });
@@ -78,4 +77,40 @@ describe('# A17: 使用者權限管理', function() {
     })
 
   })
+
+  context('# [編輯 Profile]', () => {
+    before(async() => {
+      this.ensureAuthenticated = sinon.stub(
+        helpers, 'ensureAuthenticated'
+      ).returns(true);
+      this.getUser = sinon.stub(
+        helpers, 'getUser'
+      ).returns({id: 1});
+
+      await db.User.create({name: 'User1'})
+    })
+
+    it(" PUT /users/:id ", (done) => {
+      request(app)
+        .put('/users/1')
+        .type("form")
+        .send({name: 'User1User1'})
+        .end(function(err, res) {
+          db.User.findByPk(1).then(user => {
+            user.name.should.equal('User1User1');
+            return done();
+          })
+      });
+    });
+
+    after(async () => {
+      this.ensureAuthenticated.restore();
+      this.getUser.restore();
+      await db.Comment.destroy({where: {},truncate: true})
+      await db.Restaurant.destroy({where: {},truncate: true})
+      await db.sequelize.truncate()
+    })
+
+  })
+
 })
