@@ -73,6 +73,10 @@ module.exports = (app, passport) => {
   app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
   // 移除最愛
   app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
+  // 加入like
+  app.post('/like/:restaurantId', authenticated, userController.addLike)
+  // 移除like
+  app.delete('/like/:restaurantId', authenticated, userController.removeLike)
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
