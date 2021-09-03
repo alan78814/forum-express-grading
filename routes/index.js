@@ -69,7 +69,10 @@ module.exports = (app, passport) => {
   app.post('/comments', authenticated, commentController.postComment)
   // 點擊前往dashboard 頁面
   app.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
-
+  // 加入最愛
+  app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+  // 移除最愛
+  app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
