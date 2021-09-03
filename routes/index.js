@@ -73,6 +73,8 @@ module.exports = (app, passport) => {
   app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
   // 移除最愛
   app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
+  // 美食達人，和 A19合併後記得更改位置:https://lighthouse.alphacamp.co/courses/118/units/25628
+  app.get('/users/top', authenticated, userController.getTopUser)
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)

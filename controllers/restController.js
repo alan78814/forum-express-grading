@@ -31,12 +31,15 @@ const restController = {
             const next = page + 1 > pages ? pages : page + 1
 
             // clean up restaurant data
+            console.log(result.rows)
             const data = result.rows.map(r => ({
                 ...r.dataValues,
                 description: r.dataValues.description.substring(0, 50),
                 categoryName: r.dataValues.Category.name,
                 isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
             }))
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            console.log(data)
             Category.findAll({
                 raw: true,
                 nest: true
