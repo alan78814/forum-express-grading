@@ -55,6 +55,9 @@ module.exports = (app, passport) => {
   app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
   // 刪除評論
   app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
+  // 追蹤功能
+  app.post('/following/:userId', authenticated, userController.addFollowing)
+  app.delete('/following/:userId', authenticated, userController.removeFollowing)
 
   // 前台
   //如果使用者訪問首頁，就導向 /restaurants 的頁面
