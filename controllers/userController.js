@@ -3,6 +3,8 @@ const db = require('../models')
 const User = db.User
 const Favorite = db.Favorite
 const Followship = db.Followship
+const Like = db.Like
+const helpers = require('../_helpers')
 
 const userController = {
     signUpPage: (req, res) => {
@@ -50,7 +52,7 @@ const userController = {
 
     addFavorite: (req, res) => {
         return Favorite.create({
-            UserId: req.user.id,
+            UserId: helpers.getUser(req).id,
             RestaurantId: req.params.restaurantId
         })
             .then((restaurant) => {
@@ -61,7 +63,7 @@ const userController = {
     removeFavorite: (req, res) => {
         return Favorite.findOne({
             where: {
-                UserId: req.user.id,
+                UserId: helpers.getUser(req).id,
                 RestaurantId: req.params.restaurantId
             }
         })
@@ -93,7 +95,7 @@ const userController = {
             return res.render('topUser', { users: users })
         })
     },
-    
+
     addFollowing: (req, res) => {
         return Followship.create({
             followerId: req.user.id,
@@ -101,6 +103,31 @@ const userController = {
         })
             .then((followship) => {
                 return res.redirect('back')
+            })
+    },
+
+    addLike: (req, res) => {
+        return Like.create({
+            UserId: helpers.getUser(req).id,
+            RestaurantId: req.params.restaurantId
+        })
+            .then(() => {
+                return res.redirect('back')
+            })
+    },
+
+    removeLike: (req, res) => {
+        return Like.findOne({
+            where: {
+                UserId: helpers.getUser(req).id,
+                RestaurantId: req.params.restaurantId
+            }
+        })
+            .then((like) => {
+                like.destroy()
+                    .then(() => {
+                        return res.redirect('back')
+                    })
             })
     },
 
@@ -114,6 +141,21 @@ const userController = {
             .then((followship) => {
                 followship.destroy()
                     .then((followship) => {
+                        return res.redirect('back')
+                    })
+            })
+    },
+
+    removeLike: (req, res) => {
+        return Like.findOne({
+            where: {
+                UserId: helpers.getUser(req).id,
+                RestaurantId: req.params.restaurantId
+            }
+        })
+            .then((like) => {
+                like.destroy()
+                    .then(() => {
                         return res.redirect('back')
                     })
             })
