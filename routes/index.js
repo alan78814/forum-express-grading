@@ -82,6 +82,13 @@ module.exports = (app, passport) => {
   app.post('/like/:restaurantId', authenticated, userController.addLike)
   // 移除like
   app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+  // 瀏覽 Profile
+  app.get('/users/:id', authenticated, userController.getUser)
+  // 瀏覽編輯 Profile 頁面
+  app.get('/users/:id/edit', authenticated, userController.editUser)
+  //  編輯 Profile
+  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)

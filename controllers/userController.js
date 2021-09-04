@@ -5,6 +5,10 @@ const Favorite = db.Favorite
 const Followship = db.Followship
 const Like = db.Like
 const helpers = require('../_helpers')
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 
 const userController = {
     signUpPage: (req, res) => {
@@ -159,6 +163,74 @@ const userController = {
                         return res.redirect('back')
                     })
             })
+    },
+
+    getUser: (req, res, next) => {
+        const userId = Number(req.params.id)
+        User.findAndCountAll({
+            include: [{ model: Comment, include: [Restaurant] }],
+            where: { id: userId }
+        })
+            .then((user) => {
+                return res.render('profile', {
+                    user: user.rows[0].toJSON(),
+                    count: user.rows[0].Comments.length // count 直接使用 findAndCountAll 之 count 當沒評論時會顯示1
+                })
+            })
+            .catch(err => next(err))
+    },
+
+    editUser: (req, res, next) => {
+        if ((helpers.getUser(req).id) !== Number(req.params.id)) {
+            req.flash('error_messages', "can not change other's profile")
+            return res.redirect(`/users/${req.user.id}`)
+        }
+
+        User.findByPk(req.params.id)
+            .then((user) => {
+                return res.render('editProfile', { user: user.toJSON() })
+            })
+            .catch(err => next(err))
+    },
+
+    putUser: (req, res, next) => {
+        if (!req.body.name) {
+            req.flash('error_messages', "name didn't exist")
+            return res.redirect('back')
+        }
+
+        const { file } = req
+        if (file) {
+            imgur.setClientID(IMGUR_CLIENT_ID);
+            imgur.upload(file.path, (err, img) => {
+                return User.findByPk(req.params.id)
+                    .then((user) => {
+                        user.update({
+                            name: req.body.name,
+                            image: file ? img.data.link : user.image,
+                        })
+                            .then(() => {
+                                req.flash('success_messages', 'user was successfully to update')
+                                res.redirect(`/users/${req.params.id}`)
+                            })
+                    })
+                    .catch(err => next(err))
+            })
+        }
+        else {
+            return User.findByPk(req.params.id)
+                .then((user) => {
+                    user.update({
+                        name: req.body.name,
+                        image: null,
+                    })
+                        .then(() => {
+                            req.flash('success_messages', 'user was successfully to update')
+                            res.redirect(`/users/${req.params.id}`)
+                        })
+                })
+                .catch(err => next(err))
+        }
     },
 }
 
