@@ -41,7 +41,12 @@ app.listen(port, () => {
 
 // 引入 routes 並將 app 傳進去，讓 routes 可以用 app 這個物件來指定路由
 // 把 passport 傳入 routes
-require('./routes')(app, passport)
+// 引入路由器時，路徑設定為 /routes 就會自動去尋找目錄下叫做 index 的檔案 -> index.js export 為一 function，再去做分流
+// function(app) {
+//   app.use('/', routes)
+//   app.use('/api', apis)
+// }
+require('./routes')(app)
 
 
 module.exports = app
