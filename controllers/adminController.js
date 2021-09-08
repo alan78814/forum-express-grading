@@ -59,7 +59,7 @@ const adminController = {
         })
     },
 
-    // 
+    // 抽取成 services 模組
     putRestaurant: (req, res) => {
         adminService.putRestaurant(req, res, (data) => {
             if (data['status'] === 'error') {
