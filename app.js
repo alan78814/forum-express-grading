@@ -6,13 +6,15 @@ const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
-const passport = require('./config/passport')
+
 const methodOverride = require('method-override')
 const helpers = require('./_helpers')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+
+const passport = require('./config/passport') //讓 passport.js 可以吃到環境參數
 
 app.engine('handlebars', handlebars({
   defaultLayout: 'main',
